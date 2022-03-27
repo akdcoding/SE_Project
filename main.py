@@ -1,3 +1,4 @@
+from numpy import number
 import pandas as pd
 from Item import Item
 from Invoice import Invoice
@@ -5,6 +6,32 @@ from utility import print_invoice
 
 CUSTOMER_TAXPERCENT = 0.095
 SHIPPING_FEES = 4.99
+from Warehouse import Warehouse
+
+def printInvoice(invoice):
+    print("INVOICE")
+    print("Date: ", invoice.open_date)
+    for item in invoice.items:
+        itemName = item.name
+        salesPrice = item.sales_price
+        print(f"{itemName} ${salesPrice}")
+
+    print("\nTAX: $", invoice.taxAmount)
+    print("\nSubtotal: $", invoice.subtotal)
+
+    print("\nShipping Fees: $", invoice.shipFees)
+    print("\nTotal: $", invoice.total)
+
+def printInventory(warehouseIds, warehouse_inventory):
+    counter = 0
+    for warehouseData in warehouse_inventory:
+        print('\nWarehouse '+ str(warehouseIds[counter]))
+        for inventoryItem in warehouseData:
+            itemName = inventoryItem.name
+            salesPrice = inventoryItem.sales_price
+            print(f"{itemName} ${salesPrice}")
+        counter +=1
+
 
 
 def main():
@@ -31,6 +58,23 @@ def main():
 
     # TODO: Write the new invoice data to database("invoice.csv")
 
+
+    # Inventory Lookup
+    warehouse = Warehouse()
+    warehouse_data = pd.read_csv("warehouse.csv", header=0)
+    warehouse_inventory = []
+    warehouseIds = []
+    
+    #print(warehouse_data)
+    for i in range(len(warehouse_data)):
+        itemIds = warehouse.getProductList(str(warehouse_data.loc[i, "availableItems"]))
+        warehouseIds.append(warehouse_data.loc[i, "id"])
+        
+        warehouse_inventory.append(itemIds)
+    printInventory(warehouseIds,warehouse_inventory)
+    warehouse.updateItemsList(['6','7'],2)
+
+    
 
 if __name__ == "__main__":
     main()
