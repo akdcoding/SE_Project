@@ -2,37 +2,11 @@ from numpy import number
 import pandas as pd
 from Item import Item
 from Invoice import Invoice
-from utility import print_invoice
+from utility import *
 
 CUSTOMER_TAXPERCENT = 0.095
 SHIPPING_FEES = 4.99
 from Warehouse import Warehouse
-
-def printInvoice(invoice):
-    print("INVOICE")
-    print("Date: ", invoice.open_date)
-    for item in invoice.items:
-        itemName = item.name
-        salesPrice = item.sales_price
-        print(f"{itemName} ${salesPrice}")
-
-    print("\nTAX: $", invoice.taxAmount)
-    print("\nSubtotal: $", invoice.subtotal)
-
-    print("\nShipping Fees: $", invoice.shipFees)
-    print("\nTotal: $", invoice.total)
-
-def printInventory(warehouseIds, warehouse_inventory):
-    counter = 0
-    for warehouseData in warehouse_inventory:
-        print('\nWarehouse '+ str(warehouseIds[counter]))
-        for inventoryItem in warehouseData:
-            itemName = inventoryItem.name
-            salesPrice = inventoryItem.sales_price
-            print(f"{itemName} ${salesPrice}")
-        counter +=1
-
-
 
 def main():
 
@@ -42,15 +16,15 @@ def main():
     invoice = Invoice()
 
     # Database retrieval
-    items_data = pd.read_csv("item.csv")
+    items_data = fetchInventory()
     for cid in checkedout_items_id:
         # Retrieves info on item customer wants to check out
         row = items_data.loc[items_data["id"] == cid]
-        name = row.values[0, 1]
-        sales_price = float(row.values[0, 2])
-        cost_price = float(row.values[0, 3])
-        invoice.add_items(Item(cid, name, sales_price, cost_price))
-
+        warehouse_id = int(row.values[0,1])
+        name = row.values[0, 2]
+        sales_price = float(row.values[0, 3])
+        cost_price = float(row.values[0, 4])
+        invoice.add_items(Item(cid, warehouse_id, name, sales_price, cost_price))
     invoice.calculate_sales()
     invoice.add_tax(CUSTOMER_TAXPERCENT)
     invoice.add_shipping_fees(SHIPPING_FEES)
@@ -58,21 +32,24 @@ def main():
 
     # TODO: Write the new invoice data to database("invoice.csv")
 
-
     # Inventory Lookup
     warehouse = Warehouse()
-    warehouse_data = pd.read_csv("warehouse.csv", header=0)
+
+    # Adding new item to add new row in item.csv and adding new items to warehouse 2
+    newItem = Item(8,2,'Logitech S150 USB Speakers with Digital Sound', 500.00, 350.50)
+    newItem.addItem(warehouse)
+    
+    # print inventory of each warehouse
+    warehouse_data = fetchWarehouseData()
     warehouse_inventory = []
     warehouseIds = []
-    
-    #print(warehouse_data)
+
     for i in range(len(warehouse_data)):
-        itemIds = warehouse.getProductList(str(warehouse_data.loc[i, "availableItems"]))
+        itemIds = warehouse.getProductList(str(warehouse_data.loc[i, "availableItems"]),items_data)
         warehouseIds.append(warehouse_data.loc[i, "id"])
-        
         warehouse_inventory.append(itemIds)
-    printInventory(warehouseIds,warehouse_inventory)
-    warehouse.updateItemsList(['6','7'],2)
+    print_inventory(warehouseIds,warehouse_inventory)
+
 
     
 

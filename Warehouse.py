@@ -1,6 +1,7 @@
 from uuid import uuid4
 import pandas as pd
 from Item import Item
+from utility import *
 
 # Inventory Lookup
 class Warehouse:
@@ -10,24 +11,24 @@ class Warehouse:
         self.capacity = 10
         self.availableItems = []
 
-    def getProductList(self,warehouse_data):
-        items_data = pd.read_csv("item.csv")
+    def getProductList(self,warehouse_data,items_data):
         data = warehouse_data.split(",")
         self.items = []
 
         # For each item id in a warehouse_data return item details
         for item_id in data:
             row = items_data.loc[items_data["id"] == int(item_id)]
-            self.items.append(Item(int(row.id), str(row.name), float(row.salesPrice), float(row.costPrice)))
+            if list(row.values) != []:
+                self.items.append(Item(int(row.values[0,0]), int(row.values[0,1]), str(row.values[0,2]), float(row.values[0,3]), float(row.values[0,4])))
             
         return self.items
 
     def updateItemsList(self, newItems=[], warehouseId=1):
-        items_data = pd.read_csv("warehouse.csv")
-        row = items_data.loc[items_data["id"] == int(warehouseId)]
+        warehouse_data = fetchWarehouseData()
+        row = warehouse_data.loc[warehouse_data["id"] == int(warehouseId)]
 
         # Finding index of row of a warehouse.csv to be updated
-        idx = items_data.index[items_data["id"] == int(warehouseId)].tolist()
+        idx = warehouse_data.index[warehouse_data["id"] == int(warehouseId)].tolist()
 
         # Building a string to update items ids in a warehouse
         res1 = list(map(str, list(row.availableItems)[0].split(",")))
@@ -35,7 +36,7 @@ class Warehouse:
         delim=","
         res2 = delim.join(self.items)
 
-        items_data.loc[idx[0],'availableItems']=str(res2)
+        warehouse_data.loc[idx[0],'availableItems']=str(res2)
 
         # Updating warehouse csv
-        items_data.to_csv("warehouse.csv", index=False, header=True)
+        postWarehouseData(warehouse_data)
