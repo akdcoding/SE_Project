@@ -1,6 +1,7 @@
 from datetime import date
 import pandas as pd
 from tabulate import tabulate
+from Item import Item
 
 
 def print_invoice(invoice):
@@ -39,6 +40,54 @@ def print_inventory(warehouseIds, warehouse_inventory):
             warehouse_data_arr.append(item_arr)
         counter += 1
         print(tabulate(warehouse_data_arr, headers=["Id", "Name", "Price", "Cost"]))
+
+
+""" Database function """
+
+
+def update_warehouse_availableItems(newItems=[], warehouseId=1):
+    warehouse_data = fetch_warehouse_data()
+    row = warehouse_data.loc[warehouse_data["id"] == int(warehouseId)]
+
+    # Finding index of row of a warehouse.csv to be updated
+    idx = warehouse_data.index[warehouse_data["id"] == int(warehouseId)].tolist()
+
+    # Building a string to update items ids in a warehouse
+    res1 = list(map(str, list(row.availableItems)[0].split(",")))
+    availableItems = res1 + newItems
+    delim = ","
+    res2 = delim.join(availableItems)
+
+    warehouse_data.loc[idx[0], 'availableItemsId'] = str(res2)
+    # Database (-)
+    # Updating warehouse csv
+    post_warehouse_data(warehouse_data)
+
+
+def get_product_list(warehouse_data, items_data):
+    items = []
+    data = warehouse_data.split(",")
+    # For each item id in a warehouse_data return item details
+    for item_id in data:
+        row = items_data.loc[items_data["id"] == int(item_id)]
+        if list(row.values):
+            items.append(
+                Item(int(row.values[0, 0]), int(row.values[0, 1]), str(row.values[0, 2]), float(row.values[0, 3]),
+                     float(row.values[0, 4])))
+
+    return items
+
+
+"""Adds a newly created item to item.csv & warehouse.csv"""
+
+
+def update_item_warehouse(Item, warehouse):
+    newItem = {"id": [Item.id], "warehouseid": [warehouse.id], "name": [Item.name],
+               "salesprice": [Item.sales_price], "costprice": [Item.cost_price],
+               "datesold": [Item.dateSold]}
+    itemDf = pd.DataFrame(newItem)
+    # Add new item to csv
+    post_item_data(itemDf)
 
 
 def fetch_inventory():

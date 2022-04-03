@@ -1,7 +1,5 @@
 from uuid import uuid4
-import pandas as pd
-from Item import Item
-from utility import *
+
 
 # Inventory Lookup
 class Warehouse:
@@ -9,34 +7,22 @@ class Warehouse:
         self.id = uuid4()
         self.location = ''
         self.capacity = 10
-        self.availableItems = []
+        # Must be a list of integer ids in string format
+        self.availableItemsId = []
 
-    def get_product_list(self, warehouse_data, items_data):
-        data = warehouse_data.split(",")
-        self.items = []
+    def set_availableItems(self, items):
+        if items:
+            try:
+                if any(isinstance(item, str) for item in items) and any(isinstance(int(item), int) for item in items):
+                    self.availableItemsId = items
+            except ValueError:
+                print("Item id must be valid integer")
 
-        # For each item id in a warehouse_data return item details
-        for item_id in data:
-            row = items_data.loc[items_data["id"] == int(item_id)]
-            if list(row.values) != []:
-                self.items.append(Item(int(row.values[0,0]), int(row.values[0,1]), str(row.values[0,2]), float(row.values[0,3]), float(row.values[0,4])))
-            
-        return self.items
-
-    def update_item_list(self, newItems=[], warehouseId=1):
-        warehouse_data = fetch_warehouse_data()
-        row = warehouse_data.loc[warehouse_data["id"] == int(warehouseId)]
-
-        # Finding index of row of a warehouse.csv to be updated
-        idx = warehouse_data.index[warehouse_data["id"] == int(warehouseId)].tolist()
-
-        # Building a string to update items ids in a warehouse
-        res1 = list(map(str, list(row.availableItems)[0].split(",")))
-        self.items = res1 + newItems
-        delim=","
-        res2 = delim.join(self.items)
-
-        warehouse_data.loc[idx[0],'availableItems']=str(res2)
-
-        # Updating warehouse csv
-        post_warehouse_data(warehouse_data)
+    def update_item_list(self, newItemIds):
+        # Update availableItemsId with a new single item id
+        if newItemIds:
+            try:
+                if any(isinstance(item, str) for item in newItemIds) and any(isinstance(int(item), int) for item in newItemIds):
+                    self.availableItemsId += newItemIds
+            except ValueError:
+                print("New items ID must be integer")

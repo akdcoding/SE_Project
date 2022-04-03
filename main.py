@@ -1,6 +1,3 @@
-from numpy import number
-import pandas as pd
-from Item import Item
 from Invoice import Invoice
 from utility import *
 from Warehouse import Warehouse
@@ -9,8 +6,8 @@ CUSTOMER_TAXPERCENT = 0.095
 SHIPPING_FEES = 4.99
 SALES_MAN = "Mr. Win"
 
-def main():
 
+def main():
     # Ids of items that customer checks out from store
     checkedout_items_id = [1, 2, 5, 2]
 
@@ -21,7 +18,7 @@ def main():
     for cid in checkedout_items_id:
         # Retrieves info on item customer wants to check out
         row = items_data.loc[items_data["id"] == cid]
-        warehouse_id = int(row.values[0,1])
+        warehouse_id = int(row.values[0, 1])
         name = row.values[0, 2]
         sales_price = float(row.values[0, 3])
         cost_price = float(row.values[0, 4])
@@ -37,22 +34,25 @@ def main():
     warehouse = Warehouse()
 
     # Adding new item to add new row in item.csv and adding new items to warehouse 2
-    newItem = Item(8,2,'Logitech S150 USB Speakers with Digital Sound', 500.00, 350.50)
-    newItem.addItem(warehouse)
-    
+    newItem = Item(8, 2, 'Logitech S150 USB Speakers with Digital Sound', 500.00, 350.50)
+    warehouse.update_item_list([str(newItem.id)])
+    # This updates the
+    update_warehouse_availableItems([str(newItem.id)], newItem.warehouse_id)
+    # Update databases
+    update_item_warehouse(newItem, warehouse)
+
     # print inventory of each warehouse
     warehouse_data = fetch_warehouse_data()
     warehouse_inventory = []
     warehouseIds = []
 
     for i in range(len(warehouse_data)):
-        itemIds = warehouse.get_product_list(str(warehouse_data.loc[i, "availableItems"]), items_data)
+        items = get_product_list(str(warehouse_data.loc[i, "availableItems"]), items_data)
+        warehouse.set_availableItems([item.id for item in items])
         warehouseIds.append(warehouse_data.loc[i, "id"])
-        warehouse_inventory.append(itemIds)
-    print_inventory(warehouseIds,warehouse_inventory)
+        warehouse_inventory.append(items)
+    print_inventory(warehouseIds, warehouse_inventory)
 
-
-    
 
 if __name__ == "__main__":
     main()

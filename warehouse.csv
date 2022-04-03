@@ -1,3 +1,3 @@
-id,location,capacity,availableItems
-1,a,10,"1,2,3"
-2,b,5,"4,5,6,7,8,8,8,8"
+id,location,capacity,availableItems,availableItemsId
+1,a,10,"1,2,3",
+2,b,5,"4,5,6,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8","4,5,6,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8"
