@@ -10,7 +10,7 @@ from Item import Item
 
 
 class Invoice:
-    def __init__(self):
+    def __init__(self, salesman):
         # self.id = uuid4()
         self.id = 10
         self.total = 0.0
@@ -22,6 +22,8 @@ class Invoice:
         self.open_date = date.today()
         # Date on which invoice is fully paid
         self.close_date = None
+        # Each invoice brought by a particular salesman
+        self.salesman = salesman
 
         self.items = []
 

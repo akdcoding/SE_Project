@@ -25,7 +25,7 @@ class Item(ProductLine):
                 "salesprice": [self.sales_price], "costprice": [self.cost_price],
                 "datesold": [self.dateSold]}
         itemDf = pd.DataFrame(newItem)
-        warehouse.updateItemsList([str(self.id)],self.warehouseid)
+        warehouse.update_item_list([str(self.id)], self.warehouseid)
 
         # Add new item to csv
-        postItemData(itemDf)
+        post_item_data(itemDf)

@@ -3,20 +3,21 @@ import pandas as pd
 from Item import Item
 from Invoice import Invoice
 from utility import *
+from Warehouse import Warehouse
 
 CUSTOMER_TAXPERCENT = 0.095
 SHIPPING_FEES = 4.99
-from Warehouse import Warehouse
+SALES_MAN = "Mr. Win"
 
 def main():
 
     # Ids of items that customer checks out from store
     checkedout_items_id = [1, 2, 5, 2]
 
-    invoice = Invoice()
+    invoice = Invoice(salesman=SALES_MAN)
 
     # Database retrieval
-    items_data = fetchInventory()
+    items_data = fetch_inventory()
     for cid in checkedout_items_id:
         # Retrieves info on item customer wants to check out
         row = items_data.loc[items_data["id"] == cid]
@@ -40,12 +41,12 @@ def main():
     newItem.addItem(warehouse)
     
     # print inventory of each warehouse
-    warehouse_data = fetchWarehouseData()
+    warehouse_data = fetch_warehouse_data()
     warehouse_inventory = []
     warehouseIds = []
 
     for i in range(len(warehouse_data)):
-        itemIds = warehouse.getProductList(str(warehouse_data.loc[i, "availableItems"]),items_data)
+        itemIds = warehouse.get_product_list(str(warehouse_data.loc[i, "availableItems"]), items_data)
         warehouseIds.append(warehouse_data.loc[i, "id"])
         warehouse_inventory.append(itemIds)
     print_inventory(warehouseIds,warehouse_inventory)

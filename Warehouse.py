@@ -11,7 +11,7 @@ class Warehouse:
         self.capacity = 10
         self.availableItems = []
 
-    def getProductList(self,warehouse_data,items_data):
+    def get_product_list(self, warehouse_data, items_data):
         data = warehouse_data.split(",")
         self.items = []
 
@@ -23,8 +23,8 @@ class Warehouse:
             
         return self.items
 
-    def updateItemsList(self, newItems=[], warehouseId=1):
-        warehouse_data = fetchWarehouseData()
+    def update_item_list(self, newItems=[], warehouseId=1):
+        warehouse_data = fetch_warehouse_data()
         row = warehouse_data.loc[warehouse_data["id"] == int(warehouseId)]
 
         # Finding index of row of a warehouse.csv to be updated
@@ -39,4 +39,4 @@ class Warehouse:
         warehouse_data.loc[idx[0],'availableItems']=str(res2)
 
         # Updating warehouse csv
-        postWarehouseData(warehouse_data)
+        post_warehouse_data(warehouse_data)
