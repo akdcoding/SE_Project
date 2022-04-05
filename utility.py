@@ -8,10 +8,11 @@ def print_invoice(invoice):
     print("=" * 20 + '\033[1m' + "INVOICE" + '\033[1m' + "=" * 20)
     print("Date: ", invoice.open_date)
     print("Salesman: ", invoice.salesman)
+    print("Customer: ", invoice.customer)
     print("-" * 50)
     i = 1
 
-    for item in invoice.items:
+    for item in invoice.items_id:
         name = item.name
         price = ("$" + str(item.sales_price)).ljust(25)
         print(f"[{i}]", name + "     " + price)
@@ -52,7 +53,7 @@ def update_warehouse_availableItems(newItems=[], warehouseId=1):
     # Finding index of row of a warehouse.csv to be updated
     idx = warehouse_data.index[warehouse_data["id"] == int(warehouseId)].tolist()
 
-    # Building a string to update items ids in a warehouse
+    # Building a string to update items_id ids in a warehouse
     res1 = list(map(str, list(row.availableItems)[0].split(",")))
     availableItems = res1 + newItems
     delim = ","
@@ -67,7 +68,7 @@ def update_warehouse_availableItems(newItems=[], warehouseId=1):
 def get_product_list(warehouse_data, items_data):
     items = []
     data = warehouse_data.split(",")
-    # For each item id in a warehouse_data return item details
+    # For each item_id id in a warehouse_data return item_id details
     for item_id in data:
         row = items_data.loc[items_data["id"] == int(item_id)]
         if list(row.values):
@@ -78,7 +79,7 @@ def get_product_list(warehouse_data, items_data):
     return items
 
 
-"""Adds a newly created item to item.csv & warehouse.csv"""
+"""Adds a newly created item_id to item_id.csv & warehouse.csv"""
 
 
 def update_item_warehouse(Item, warehouse):
@@ -86,7 +87,7 @@ def update_item_warehouse(Item, warehouse):
                "salesprice": [Item.sales_price], "costprice": [Item.cost_price],
                "datesold": [Item.dateSold]}
     itemDf = pd.DataFrame(newItem)
-    # Add new item to csv
+    # Add new item_id to csv
     post_item_data(itemDf)
 
 
@@ -105,4 +106,4 @@ def post_warehouse_data(warehouse_data):
 
 
 def post_item_data(item_data):
-    item_data.to_csv("item.csv", index=False, header=False, mode="a", )
+    item_data.to_csv("item_id.csv", index=False, header=False, mode="a", )

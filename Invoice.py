@@ -5,12 +5,12 @@ from Item import Item
 """
     Invoice class handles the entire process of creating a 
     new invoice whenever a customer checks out one or more 
-    items at store.
+    items_id at store.
 """
 
 
 class Invoice:
-    def __init__(self, salesman):
+    def __init__(self, salesman, customer):
         # self.id = uuid4()
         self.id = 10
         self.total = 0.0
@@ -24,17 +24,19 @@ class Invoice:
         self.close_date = None
         # Each invoice brought by a particular salesman
         self.salesman = salesman
+        # Each invoice is associated with a customer
+        self.customer = customer
+        # Id of items in the checkout basket
+        self.items_id = []
 
-        self.items = []
-
-    # Passing ids of items customer wants to check out
-    def add_items(self, item):
-        if isinstance(item, Item):
-            self.items.append(item)
+    # Passing ids of items_id customer wants to check out
+    def add_items(self, item_id):
+        if isinstance(item_id, Item):
+            self.items_id.append(item_id)
 
     def calculate_sales(self):
-        if self.items:
-            for item in self.items:
+        if self.items_id:
+            for item in self.items_id:
                 self.subtotal = self.subtotal + item.sales_price
 
     def add_tax(self, tax_percent):

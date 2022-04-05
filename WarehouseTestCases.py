@@ -8,7 +8,7 @@ class WarehouseTestCases(TestCase):
         self.warehouse = Warehouse()
 
     def test_set_availableItems(self):
-        # Bad values of item id are passed
+        # Bad values of item_id id are passed
         self.warehouse.set_availableItems("abcdefg")
         self.assertEqual(self.warehouse.availableItemsId, [])
         

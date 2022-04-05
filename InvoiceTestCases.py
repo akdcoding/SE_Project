@@ -7,24 +7,24 @@ from datetime import date
 class InvoiceTestCases(TestCase):
 
     def setUp(self):
-        self.item1 = Item(5, "iFloss", 30.10, 20.20)
-        self.item2 = Item(4, "Drone", 45.00, 10.00)
-        self.invoice = Invoice()
+        self.item1 = Item(5, "iFloss", 30.10, 20.20, 10.00)
+        self.item2 = Item(4, "Drone", 45.00, 10.00, 4.500)
+        self.invoice = Invoice("MR. WIN", "MRs.WIN")
 
     def test_add_items(self):
         # Entering something other than Item object
         self.invoice.add_items("Whatever")
-        self.assertEqual([], self.invoice.items)
+        self.assertEqual([], self.invoice.items_id)
 
         self.invoice.add_items(self.item1)
-        self.assertEqual(self.item1, self.invoice.items[0])
+        self.assertEqual(self.item1, self.invoice.items_id[0])
 
     def test_calculate_sales(self):
-        # Sales shouldn't be calculated without any items to check out
+        # Sales shouldn't be calculated without any items_id to check out
         self.invoice.calculate_sales()
         self.assertEqual(0.0, self.invoice.subtotal)
 
-        # Subtotal for two items
+        # Subtotal for two items_id
         subtotal = self.item1.sales_price + self.item2.sales_price
         self.invoice.add_items(self.item1)
         self.invoice.add_items(self.item2)

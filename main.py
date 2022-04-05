@@ -2,21 +2,22 @@ from Invoice import Invoice
 from utility import *
 from Warehouse import Warehouse
 
+CUSTOMER = "Mrs.Win"
 CUSTOMER_TAXPERCENT = 0.095
 SHIPPING_FEES = 4.99
 SALES_MAN = "Mr. Win"
 
 
 def main():
-    # Ids of items that customer checks out from store
+    # Ids of items_id that customer checks out from store
     checkedout_items_id = [1, 2, 5, 2]
 
-    invoice = Invoice(salesman=SALES_MAN)
+    invoice = Invoice(salesman=SALES_MAN, customer=CUSTOMER)
 
     # Database retrieval
     items_data = fetch_inventory()
     for cid in checkedout_items_id:
-        # Retrieves info on item customer wants to check out
+        # Retrieves info on item_id customer wants to check out
         row = items_data.loc[items_data["id"] == cid]
         warehouse_id = int(row.values[0, 1])
         name = row.values[0, 2]
@@ -33,7 +34,7 @@ def main():
     # Inventory Lookup
     warehouse = Warehouse()
 
-    # Adding new item to add new row in item.csv and adding new items to warehouse 2
+    # Adding new item_id to add new row in item_id.csv and adding new items_id to warehouse 2
     newItem = Item(8, 2, 'Logitech S150 USB Speakers with Digital Sound', 500.00, 350.50)
     warehouse.update_item_list([str(newItem.id)])
     # This updates the
