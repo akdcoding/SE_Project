@@ -1,3 +1,11 @@
+"""
+Authors:
+    Kyaw Htet Win
+    Akshada Thube
+    Vruddhi Mehta
+    Jency Xavier
+"""
+
 from unittest import TestCase
 from Item import Item
 from Invoice import Invoice
@@ -7,9 +15,12 @@ from datetime import date
 class InvoiceTestCases(TestCase):
 
     def setUp(self):
-        self.item1 = Item(5, "iFloss", 30.10, 20.20, 10.00)
-        self.item2 = Item(4, "Drone", 45.00, 10.00, 4.500)
-        self.invoice = Invoice("MR. WIN", "MRs.WIN")
+        # Create sample items to checkout
+        CUSTOMER = "Mrs.Win"
+        SALES_MAN = "Mr. Win"
+        self.item1 = Item(5, 2, "iFloss", 30.10, 20.20)
+        self.item2 = Item(4, 1, "Drone", 45.00, 10.00)
+        self.invoice = Invoice(CUSTOMER, SALES_MAN)
 
     def test_add_items(self):
         # Entering something other than Item object
@@ -39,8 +50,9 @@ class InvoiceTestCases(TestCase):
         self.invoice.add_tax(450)
         self.assertEqual(0.0, self.invoice.taxAmount)
 
-        tax = 0.2 * self.invoice.subtotal
-        self.invoice.add_tax(0.2)
+        CUSTOMER_TAXPERCENT = 0.095
+        tax = CUSTOMER_TAXPERCENT * self.invoice.subtotal
+        self.invoice.add_tax(CUSTOMER_TAXPERCENT)
         self.assertEqual(tax, self.invoice.taxAmount)
 
     def test_add_shipping_fees(self):
@@ -51,9 +63,10 @@ class InvoiceTestCases(TestCase):
         self.invoice.add_shipping_fees("hello")
         self.assertEqual(0.0, self.invoice.shipFees)
 
-        self.invoice.add_shipping_fees(100.00)
-        self.assertEqual(100, self.invoice.shipFees)
-        self.assertEqual(100, self.invoice.total)
+        SHIPPING_FEES = 4.99
+        self.invoice.add_shipping_fees(SHIPPING_FEES)
+        self.assertEqual(SHIPPING_FEES, self.invoice.shipFees)
+        self.assertEqual(SHIPPING_FEES, self.invoice.total) # No items added here
 
     def test_modify_invoice_status(self):
 

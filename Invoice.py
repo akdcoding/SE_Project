@@ -1,4 +1,11 @@
-from uuid import uuid4
+"""
+Authors:
+    Kyaw Htet Win
+    Akshada Thube
+    Vruddhi Mehta
+    Jency Xavier
+"""
+
 from datetime import date
 from Item import Item
 

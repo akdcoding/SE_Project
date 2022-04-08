@@ -1,3 +1,11 @@
+"""
+Authors:
+    Kyaw Htet Win
+    Akshada Thube
+    Vruddhi Mehta
+    Jency Xavier
+"""
+
 from datetime import date
 import pandas as pd
 from tabulate import tabulate
@@ -59,13 +67,16 @@ def update_warehouse_availableItems(newItems=[], warehouseId=1):
     delim = ","
     res2 = delim.join(availableItems)
 
-    warehouse_data.loc[idx[0], 'availableItemsId'] = str(res2)
+    warehouse_data.loc[idx[0], 'availableItems'] = str(res2)
     # Database (-)
     # Updating warehouse csv
     post_warehouse_data(warehouse_data)
 
 
-def get_product_list(warehouse_data, items_data):
+""" Converts items'id stored in warehouse.csv to Item objects """
+
+
+def get_item_objects(warehouse_data, items_data):
     items = []
     data = warehouse_data.split(",")
     # For each item_id id in a warehouse_data return item_id details

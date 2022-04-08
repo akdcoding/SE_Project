@@ -1,28 +1,27 @@
-from uuid import uuid4
+"""
+Authors:
+    Kyaw Htet Win
+    Akshada Thube
+    Vruddhi Mehta
+    Jency Xavier
+"""
+from Item import Item
 
 
-# Inventory Lookup
 class Warehouse:
-    def __init__(self):
-        self.id = uuid4()
+    def __init__(self, id):
+        self.id = id
         self.location = ''
         self.capacity = 10
-        # Must be a list of integer ids in string format(Items in warehouse)
-        self.availableItemsId = []
+        # Available items in warehouse (Inventory lookup)
+        self.availableItems = []
 
     def set_availableItems(self, items):
         if items:
-            try:
-                if any(isinstance(item, str) for item in items) and any(isinstance(int(item), int) for item in items):
-                    self.availableItemsId = items
-            except ValueError:
-                print("Item id must be valid integer")
+            # Must be a list of valid Item objects
+            if any(isinstance(item, Item) for item in items):
+                self.availableItems = items
 
-    def update_item_list(self, newItemIds):
-        # Update availableItemsId with a new single item_id id
-        if newItemIds:
-            try:
-                if any(isinstance(item, str) for item in newItemIds) and any(isinstance(int(item), int) for item in newItemIds):
-                    self.availableItemsId += newItemIds
-            except ValueError:
-                print("New items_id ID must be integer")
+    def update_item_list(self, newItem):
+        if isinstance(newItem, Item):
+            self.availableItems.append(newItem)

@@ -1,3 +1,10 @@
+"""
+Authors:
+    Kyaw Htet Win
+    Akshada Thube
+    Vruddhi Mehta
+    Jency Xavier
+"""
 
 class ProductLine:
     def __init__(self, name, sales_price, cost_price):
