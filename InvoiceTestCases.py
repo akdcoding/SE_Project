@@ -6,10 +6,12 @@ Authors:
     Jency Xavier
 """
 
-from unittest import TestCase
+from unittest import TestCase, TextTestRunner
 from Item import Item
 from Invoice import Invoice
 from datetime import date
+import logging
+import sys
 
 
 class InvoiceTestCases(TestCase):
@@ -74,3 +76,5 @@ class InvoiceTestCases(TestCase):
         today = date.today()
         self.assertEqual(today, self.invoice.close_date)
         self.assertEqual("Close", self.invoice.status)
+
+

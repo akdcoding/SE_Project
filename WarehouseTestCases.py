@@ -50,7 +50,7 @@ class WarehouseTestCases(TestCase):
 
         # Load items.csv database for Item details
         items_data = fetch_inventory()
-        items = get_item_objects(warehouse_data=warehouse_data, items_data=items_data)
+        items = get_item_objects(warehouse_data=items_id, items_data=items_data)
 
         self.warehouse.set_availableItems(items)
         self.assertEqual(self.warehouse.availableItems, items)
